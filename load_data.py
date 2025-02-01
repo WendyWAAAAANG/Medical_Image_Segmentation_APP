@@ -1,3 +1,6 @@
+
+"""
+
 import os
 import nibabel as nib
 
@@ -33,9 +36,8 @@ print(f"Loaded {len(data['imagesTr'])} training images.")
 print(f"Loaded {len(data['imagesTs'])} test images.")
 print(f"Loaded {len(data['labelsTr'])} training labels.")
 
-
-
 """
+
 import numpy as np
 import torch
 from PIL import Image
@@ -56,20 +58,4 @@ def load_image(filename):
         return Image.open(filename)
     
 
-        
 
-
-
-def unique_mask_values(idx, mask_dir, mask_suffix):
-    mask_file = list(mask_dir.glob)
-
-
-
-class BasicDataset(Dataset):
-    def __init__(self, images_dir: str, mask_dir)
-    
-class CarvanaDataset(BasicDataset):
-    def __init__(self, images_dir, mask_dir, scale, medsegdiff, input_size):
-        super().__init__(images_dir, mask_dir, scale, medsegdiff, input_size, mask_suffix='_mask')
-
-"""
