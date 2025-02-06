@@ -3,6 +3,7 @@ note.py
 output.txt
 testset/
 tf-logs/
+vault/
 
 
 # Byte-compiled / optimized / DLL files
