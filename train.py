@@ -23,6 +23,7 @@ from utils.data_loading import BasicDataset, CarvanaDataset
 
 from a4unet.dataloader.bratsloader import BRATSDataset3D
 from a4unet.a4unet import create_a4unet_model
+from model.unet import UNet
 
 import warnings
 
@@ -47,7 +48,7 @@ def train_model(model, device, epochs: int = 20, batch_size: int = 16, learning_
         if datasets == 'Brats':
             train_list = [transforms.Resize((input_size, input_size), antialias=True)]
             transform_train = transforms.Compose(train_list)
-            print("path: ", dir_brats)
+            # print("path: ", dir_brats)
             dataset = BRATSDataset3D(dir_brats, transform_train, test_flag=False)
         else:
             dataset = CarvanaDataset(dir_img, dir_mask, img_scale, a4unet, input_size)
@@ -162,7 +163,7 @@ def train_model(model, device, epochs: int = 20, batch_size: int = 16, learning_
             
             # update learning rate scheduler
             if not a4unet:
-                scheduler.step(val_score)
+                scheduler.step(val_score[0])
             
             # print & log validation dice
             logging.info('Validation Dice score: {}'.format(val_score[0]))
@@ -171,11 +172,12 @@ def train_model(model, device, epochs: int = 20, batch_size: int = 16, learning_
             tblogger.add_scalar("val/score", val_score[0], epoch)
             
             # save checkpoint with evaluation frequency
-            if save_checkpoint and epoch % 5 == 0:
+            # if save_checkpoint and epoch % 5 == 0:
+            if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
                 state_dict['mask_values'] = dataset.mask_values
-                torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
+                torch.save(state_dict, str(dir_checkpoint / 'sspp_checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
 
 
@@ -196,7 +198,7 @@ def get_args():
     parser.add_argument('--amp',           action='store_true', default=False,                    help='Mixed Precision')
     parser.add_argument('--bilinear',      action='store_true', default=False,                    help='Bilinear upsampling')
     parser.add_argument('--classes',       '-c',  type=int,     default=2,                        help='Number of classes')
-    parser.add_argument('--a4unet',    action='store_true', default=True,  dest='a4',       help='Enable A4Unet Arch')
+    parser.add_argument('--a4unet',    action='store_true', default=False,  dest='a4',       help='Enable A4Unet Arch')
     parser.add_argument('--datasets',      '-d', type=str,      default='Brats', dest='datasets', help='Choose Dataset')
     parser.add_argument('--input_size',    '-i',  type=int,     default=128,   dest='input_size', help='Input Size of A4Unet')
 
