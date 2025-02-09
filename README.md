@@ -1,2 +1,2 @@
-# Medical_Image_Segmentation_APP
-This is group  project for Duke AIPI.540 course.
+# A4-Unet
+A CNN network for brain tumor segmentation.
