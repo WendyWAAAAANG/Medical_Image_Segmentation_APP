@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
+import subprocess
 import shutil
 import zipfile
 import base64
@@ -80,5 +81,13 @@ async def download_sample():
     return FileResponse(SAMPLE_DATASET_PATH, filename="sample_brain_tumor.zip", media_type="application/zip")
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    server_process = subprocess.Popen(["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"])
+    ngrok_process = subprocess.Popen(["ngrok", "http", "--url=informally-unbiased-wallaby.ngrok-free.app", "8000"])
+
+    try:
+        server_process.wait()
+    except KeyboardInterrupt:
+        print("Shutting down...")
+        server_process.terminate()
+        if ngrok_process:
+            ngrok_process.terminate()
