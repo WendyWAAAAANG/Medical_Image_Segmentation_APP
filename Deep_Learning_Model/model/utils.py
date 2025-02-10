@@ -1,3 +1,14 @@
+"""
+Module containing various convolutional and upsampling layers used in U-Net architectures.
+
+This module includes:
+    - 2D and 3D convolutional layers with optional batch normalization and activation functions.
+    - 2D and 3D deconvolutional (transposed convolution) layers with batch normalization and activation functions.
+    - U-Net-specific components such as gating signals and upsampling layers.
+    - Squeeze-and-Excitation (SE) block for channel attention.
+    - Residual and bottleneck blocks for deeper architectures.
+    - Utility functions for initialization, normalization, and tensor operations.
+"""
 
 import numpy as np
 import torch
@@ -7,6 +18,9 @@ from .other import init_weights
 
 
 class conv2DBatchNorm(nn.Module):
+    """
+    2D Convolution with Batch Normalization.
+    """
     def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True):
         super(conv2DBatchNorm, self).__init__()
 
@@ -20,6 +34,9 @@ class conv2DBatchNorm(nn.Module):
 
 
 class deconv2DBatchNorm(nn.Module):
+    """
+    2D Transposed Convolution (Deconvolution) with Batch Normalization.
+    """
     def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True):
         super(deconv2DBatchNorm, self).__init__()
 
@@ -33,6 +50,9 @@ class deconv2DBatchNorm(nn.Module):
 
 
 class conv2DBatchNormRelu(nn.Module):
+    """
+    2D Convolution with Batch Normalization and ReLU Activation.
+    """
     def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True):
         super(conv2DBatchNormRelu, self).__init__()
 
@@ -47,6 +67,9 @@ class conv2DBatchNormRelu(nn.Module):
 
 
 class deconv2DBatchNormRelu(nn.Module):
+    """
+    2D Transposed Convolution (Deconvolution) with Batch Normalization.
+    """
     def __init__(self, in_channels, n_filters, k_size, stride, padding, bias=True):
         super(deconv2DBatchNormRelu, self).__init__()
 
@@ -61,6 +84,9 @@ class deconv2DBatchNormRelu(nn.Module):
 
 
 class unetConv2(nn.Module):
+    """
+    Basic U-Net convolution block with multiple stacked layers.
+    """
     def __init__(self, in_size, out_size, is_batchnorm, n=2, ks=3, stride=1, padding=1):
         super(unetConv2, self).__init__()
         self.n = n
@@ -158,6 +184,9 @@ class FCNConv3(nn.Module):
 
 
 class UnetGatingSignal2(nn.Module):
+    """
+    Gating Signal for attention mechanisms in U-Net.
+    """
     def __init__(self, in_size, out_size, is_batchnorm):
         super(UnetGatingSignal2, self).__init__()
         self.fmap_size = (4, 4)
@@ -328,7 +357,9 @@ class UnetUp3_CT(nn.Module):
 
 # Squeeze-and-Excitation Network
 class SqEx(nn.Module):
-
+    """
+    Squeeze-and-Excitation (SE) Block for channel-wise attention.
+    """
     def __init__(self, n_features, reduction=6):
         super(SqEx, self).__init__()
 
