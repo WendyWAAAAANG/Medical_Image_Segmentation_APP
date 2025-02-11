@@ -171,7 +171,7 @@ def split_dataset(training_cases, train_ratio=0.8, val_ratio=0.1, random_state=4
 
 def main():
     # Set paths
-    base_path = 'Task01_BrainTumour'
+    base_path = 'data'
     
     # Initialize model
     model = NaiveMeanModel(base_path)
@@ -239,7 +239,7 @@ def main():
         pred_mask,
         mean_mask,
         slice_idx=best_slice,
-        save_path="mean_model_results.png"
+        save_path="output/mean_model_results.png"
     )
     print("\nVisualization saved as 'mean_model_results.png'")
 
