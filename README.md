@@ -36,9 +36,9 @@ Several classical ML models were evaluated, including:
 
 ### Deep Learning Model: U-Net + SSPP
 
-A U-Net architecture with Swin Spatial Pyramid Pooling (SSPP) was used to incorporate multi-scale information. We tackle this by modifying the bottleneck layer to include Swin Spatial Pyramid Pooling (SSPP) and a Cross-Contextual Attention module shown in ![Figure](https://github.com/WendyWAAAAANG/Medical_Image_Segmentation_APP/blob/ash-reina/img/SSPP.png). This approach integrates Swin Transformer blocks with varying window sizes, providing rich contextual information.
+A U-Net architecture with Swin Spatial Pyramid Pooling (SSPP) was used to incorporate multi-scale information. We tackle this by modifying the bottleneck layer to include Swin Spatial Pyramid Pooling (SSPP) and a Cross-Contextual Attention module shown in ![Figure](https://github.com/WendyWAAAAANG/Medical_Image_Segmentation_APP/blob/ash-reina/img/SSPP.png)
 
-In DeepLab V3+, [Chen et al. (2017)](https://arxiv.org/abs/1706.05587) introduced the Atrous Spatial Pyramid Pooling (ASPP) module, which dynamically selects convolutional blocks of varying sizes to handle different target scales. This approach prevents large targets from being fragmented and maintains long-distance dependencies without altering the network structure.
+In DeepLab V3+, [Chen et al.](https://arxiv.org/abs/1706.05587) introduced the Atrous Spatial Pyramid Pooling (ASPP) module, which dynamically selects convolutional blocks of varying sizes to handle different target scales. This approach prevents large targets from being fragmented and maintains long-distance dependencies without altering the network structure.
 
 Inspired by SSPP by [Azad et al.](https://arxiv.org/abs/2208.00713), we replace four dilated convolutions with Swin Transformers to better capture long-range dependencies. The extracted features are merged and fed into a cross-contextual attention module. This enhances the model's ability to capture contextual dependencies across different scales.
 
