@@ -36,7 +36,7 @@ Several classical ML models were evaluated, including:
 
 ### Deep Learning Model: U-Net + SSPP
 
-A U-Net architecture with Swin Spatial Pyramid Pooling (SSPP) was used to incorporate multi-scale information. We tackle this by modifying the bottleneck layer to include Swin Spatial Pyramid Pooling (SSPP) and a Cross-Contextual Attention module shown in ![Figure](https://github.com/WendyWAAAAANG/Medical_Image_Segmentation_APP/blob/ash-reina/img/SSPP.png)
+A U-Net architecture with Swin Spatial Pyramid Pooling (SSPP) was used to incorporate multi-scale information. We tackle this by modifying the bottleneck layer to include Swin Spatial Pyramid Pooling (SSPP) and a Cross-Contextual Attention module shown in ![Figure](https://github.com/WendyWAAAAANG/Medical_Image_Segmentation_APP/blob/main/Deep_Learning_Model/img/SSPP.png)
 
 In DeepLab V3+, [Chen et al.](https://arxiv.org/abs/1706.05587) introduced the Atrous Spatial Pyramid Pooling (ASPP) module, which dynamically selects convolutional blocks of varying sizes to handle different target scales. This approach prevents large targets from being fragmented and maintains long-distance dependencies without altering the network structure.
 
@@ -68,12 +68,20 @@ $$
 
 ## Model Evaluation Process & Metrics
 
-The primary evaluation metric used was the Dice Similarity Coefficient (DSC). The models achieved the following scores:
+The primary evaluation metric used was the Dice Similarity Coefficient (DSC).
+
+The Dice Similarity Coefficient (DSC) is a key metric for evaluating segmentation models, ranging from 0 to 1 to represent similarity between two samples. It is calculated as:
+$$
+DSC = \frac{2TP}{FN+FP+2TP}
+$$
+Here, $TP$ represents true positive pixels, $FP$ indicates false positive pixels, and $FN$ represents false negative pixels.
+
+The models achieved the following scores:
 
 | Model                     | Dice Score |
 |---------------------------|------------|
-| Naive Model               | 51.75      |
-| Classical ML (Ensemble)   | 55.21      | 
+| Naive Model               | 56.39      |
+| Classical ML (Ensemble)   | 58.21      | 
 | U-Net (Baseline)          | 64.79      |
 | U-Net + SSPP (Ours)       | 85.37 (↑31.76%)       |
 
