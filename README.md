@@ -84,7 +84,7 @@ where:
 - **FN** represents **false negative** pixels.
 
 ### Implementation Details
-All experiments are implemented in PyTorch 2.0.1 and trained on a single GeForce GTX 4090 GPU with 24 GB memory. We use standard back-propagation with the AdamW optimizer and Softmax activation function. Training employs a batch size of 16, an initial learning rate of 1e-5, and runs for 30 epochs. Total training time varies by dataset size: approximately 20 hours for BraTS 2019, 30 hours for BraTS 2020, and 50 hours for BraTS 2021.
+All experiments are implemented in PyTorch 2.6 and trained on a single GeForce GTX 4090 GPU with 24 GB memory. We use standard back-propagation with the AdamW optimizer and Softmax activation function. Training employs a batch size of 16, an initial learning rate of 1e-5, and runs for 20 epochs. Total training time varies by dataset size: approximately 20 hours for BraTS 2020.
 
 
 ### Experiment Results
