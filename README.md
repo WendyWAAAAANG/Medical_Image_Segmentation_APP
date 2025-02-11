@@ -79,7 +79,7 @@ The primary evaluation metric used was the Dice Similarity Coefficient (DSC). Th
 
 ## Demo & Conclusion
 
-A live demo of the brain tumor segmentation application is available [link to demo].
+A live demo of the brain tumor segmentation application is available [here](https://www.youtube.com/watch?v=kiEGwjW3Hzk).
 
 The U-Net + SSPP model outperformed the naive and classical ML approaches, achieving a Dice score of 85.3. Further improvements could be made by exploring additional architectures and incorporating more training data.
 
