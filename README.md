@@ -68,6 +68,7 @@ $$
 
 ## Model Evaluation Process & Metrics
 
+### Metrics
 The primary evaluation metric used was the Dice Similarity Coefficient (DSC).
 
 The **Dice Similarity Coefficient (DSC)** is a key metric for evaluating segmentation models, ranging from **0 to 1**, representing the similarity between two samples. It is calculated as:
@@ -82,6 +83,11 @@ where:
 - **FP** indicates **false positive** pixels.
 - **FN** represents **false negative** pixels.
 
+### Implementation Details
+All experiments are implemented in PyTorch 2.0.1 and trained on a single GeForce GTX 4090 GPU with 24 GB memory. We use standard back-propagation with the AdamW optimizer and Softmax activation function. Training employs a batch size of 16, an initial learning rate of 1e-5, and runs for 30 epochs. Total training time varies by dataset size: approximately 20 hours for BraTS 2019, 30 hours for BraTS 2020, and 50 hours for BraTS 2021.
+
+
+### Experiment Results
 The models achieved the following scores:
 
 | Model                     | Dice Score |
