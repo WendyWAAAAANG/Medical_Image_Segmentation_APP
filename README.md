@@ -136,6 +136,14 @@ The U-Net + SSPP model outperformed the naive and classical ML approaches, achie
 ```
 
 ## Setup and Run Instructions
+
+Tested on `python=3.11`
+
+Install dependencies:
+```sh
+pip install -r requirements.txt
+```
+
 Directory `/sspp_unet_api` contains all the code for our FastAPI backend, which provides four HTTP endpoint methods.
 
 - `/`: Endpoint to health check, print `OK`.
