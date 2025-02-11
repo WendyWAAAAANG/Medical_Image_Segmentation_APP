@@ -93,6 +93,64 @@ The U-Net + SSPP model outperformed the naive and classical ML approaches, achie
 
 ## Repository Structure
 
-
+```sh
+.
+├── Deep_Learning_Model
+│   ├── LICENSE
+│   ├── README.md
+│   ├── img
+│   │   └── SSPP.png
+│   ├── model
+│   │   ├── dataloader
+│   │   │   └── bratsloader.py
+│   │   ├── other.py
+│   │   ├── sspp.py
+│   │   ├── sspp_utils
+│   │   │   ├── config.py
+│   │   │   ├── cross_attn.py
+│   │   │   ├── swin.py
+│   │   │   └── swin_224_7_2level.py
+│   │   ├── unet.py
+│   │   ├── unet_parts.py
+│   │   └── utils.py
+│   ├── sample_data
+│   │   └── sample_brain_tumor.zip
+│   ├── train.py
+│   └── visualize.py
+├── Naive_Model
+│   ├── LICENSE
+│   ├── README.md
+│   ├── naive-mean-model.py
+│   ├── output
+│   │   └── mean_model_results.png
+│   └── requirements.txt
+├── README.md
+├── sspp_unet_api
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── app
+│   │   ├── LICENSE
+│   │   ├── main.py
+│   │   ├── model
+│   │   │   ├── dataloader
+│   │   │   │   └── bratsloader.py
+│   │   │   ├── other.py
+│   │   │   ├── sspp.py
+│   │   │   ├── sspp_utils
+│   │   │   │   ├── config.py
+│   │   │   │   ├── cross_attn.py
+│   │   │   │   ├── swin.py
+│   │   │   │   └── swin_224_7_2level.py
+│   │   │   ├── unet.py
+│   │   │   ├── unet_parts.py
+│   │   │   └── utils.py
+│   │   ├── sample_data
+│   │   │   └── sample_brain_tumor.zip
+│   │   └── visualize.py
+│   └── requirements.txt
+└── streamlit_app
+    ├── README.md
+    └── app.py
+```
 
 ## Setup and Run Instructions
