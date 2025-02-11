@@ -1,2 +1,2 @@
 # Naive Model
-A naive approach (mean Model) for brain tumor segmentation.
+A naive approach (mean model) for brain tumor segmentation.
