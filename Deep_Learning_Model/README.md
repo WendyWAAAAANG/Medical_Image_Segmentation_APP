@@ -1,7 +1,7 @@
 # Deep Learning Model -- SSPP-Unet
 
 ## Overview
-A U-Net architecture with Swin Spatial Pyramid Pooling (SSPP) was used to incorporate multi-scale information. We tackle this by modifying the bottleneck layer to include Swin Spatial Pyramid Pooling (SSPP) and a Cross-Contextual Attention module shown in ![Figure](https://github.com/WendyWAAAAANG/Medical_Image_Segmentation_APP/blob/Roxanne/img/SSPP.png)
+A U-Net architecture with Swin Spatial Pyramid Pooling (SSPP) was used to incorporate multi-scale information. We tackle this by modifying the bottleneck layer to include Swin Spatial Pyramid Pooling (SSPP) and a Cross-Contextual Attention module shown in ![Figure](https://github.com/WendyWAAAAANG/Medical_Image_Segmentation_APP/blob/Roxanne/Deep_Learning_Model/img/SSPP.png)
 
 
 ## Architecture of SSPP
