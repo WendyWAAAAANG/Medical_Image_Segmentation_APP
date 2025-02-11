@@ -98,59 +98,60 @@ The U-Net + SSPP model outperformed the naive and classical ML approaches, achie
 ├── Deep_Learning_Model
 │   ├── LICENSE
 │   ├── README.md
-│   ├── img
-│   │   └── SSPP.png
-│   ├── model
-│   │   ├── dataloader
-│   │   │   └── bratsloader.py
-│   │   ├── other.py
-│   │   ├── sspp.py
-│   │   ├── sspp_utils
-│   │   │   ├── config.py
-│   │   │   ├── cross_attn.py
-│   │   │   ├── swin.py
-│   │   │   └── swin_224_7_2level.py
-│   │   ├── unet.py
-│   │   ├── unet_parts.py
-│   │   └── utils.py
-│   ├── sample_data
-│   │   └── sample_brain_tumor.zip
+│   ├── img/
+│   ├── model/
+│   ├── sample_data/
 │   ├── train.py
 │   └── visualize.py
 ├── Naive_Model
 │   ├── LICENSE
 │   ├── README.md
 │   ├── naive-mean-model.py
-│   ├── output
-│   │   └── mean_model_results.png
+│   ├── output/
 │   └── requirements.txt
 ├── README.md
 ├── sspp_unet_api
-│   ├── Dockerfile
-│   ├── README.md
 │   ├── app
 │   │   ├── LICENSE
 │   │   ├── main.py
-│   │   ├── model
-│   │   │   ├── dataloader
-│   │   │   │   └── bratsloader.py
-│   │   │   ├── other.py
-│   │   │   ├── sspp.py
-│   │   │   ├── sspp_utils
-│   │   │   │   ├── config.py
-│   │   │   │   ├── cross_attn.py
-│   │   │   │   ├── swin.py
-│   │   │   │   └── swin_224_7_2level.py
-│   │   │   ├── unet.py
-│   │   │   ├── unet_parts.py
-│   │   │   └── utils.py
-│   │   ├── sample_data
-│   │   │   └── sample_brain_tumor.zip
+│   │   ├── model/
+│   │   ├── sample_data/
 │   │   └── visualize.py
 │   └── requirements.txt
-└── streamlit_app
-    ├── README.md
-    └── app.py
+└── streamlit_app/
 ```
 
 ## Setup and Run Instructions
+Directory `/sspp_unet_api` contains all the code for our FastAPI backend, which provides four HTTP endpoint methods.
+
+- `/`: Endpoint to health check, print `OK`.
+- `/predict`: Endpoint to predict the masks for the uploaded brain tumor slices.
+- `/upload`: Endpoint to upload a ZIP file containing brain tumor slices. Extracts files and stores them in a designated directory.
+- `/download_sample`: Endpoint to provide a sample dataset for users to download.
+
+To test the FastAPI locally:
+```sh
+cd sspp_unet_api/app/
+python main.py
+```
+
+To create a docker image and test locally:
+```sh
+docker build -t <image_name> .
+docker run -d <image_name>
+```
+
+If successful, you should see your FastAPI application running on `localhost:8000`. You can check `localhost:8000/docs` to test each endpoint method.
+
+--- 
+
+Directory `/streamlit_app` contains Streamlit frontend allows users to: 
+1. Upload files for predictions 
+2. Download sample brain tumor data 
+3. Visualize brain slices, true masks, and predicted masks.
+
+To test the Streamlit app locally:
+```sh
+cd streamlit_app/
+streamlit run app.py
+```
