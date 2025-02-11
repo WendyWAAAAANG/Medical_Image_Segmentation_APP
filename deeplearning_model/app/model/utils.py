@@ -1,3 +1,14 @@
+"""
+Module containing various convolutional and upsampling layers used in U-Net architectures.
+
+This module includes:
+    - 2D and 3D convolutional layers with optional batch normalization and activation functions.
+    - 2D and 3D deconvolutional (transposed convolution) layers with batch normalization and activation functions.
+    - U-Net-specific components such as gating signals and upsampling layers.
+    - Squeeze-and-Excitation (SE) block for channel attention.
+    - Residual and bottleneck blocks for deeper architectures.
+    - Utility functions for initialization, normalization, and tensor operations.
+"""
 
 import numpy as np
 import torch
@@ -7,6 +18,9 @@ from .other import init_weights
 
 
 class conv2DBatchNorm(nn.Module):
+    """
+    2D Convolution with Batch Normalization.
+    """
     def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True):
         super(conv2DBatchNorm, self).__init__()
 
@@ -20,6 +34,9 @@ class conv2DBatchNorm(nn.Module):
 
 
 class deconv2DBatchNorm(nn.Module):
+    """
+    2D Transposed Convolution (Deconvolution) with Batch Normalization.
+    """
     def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True):
         super(deconv2DBatchNorm, self).__init__()
 
@@ -33,6 +50,9 @@ class deconv2DBatchNorm(nn.Module):
 
 
 class conv2DBatchNormRelu(nn.Module):
+    """
+    2D Convolution with Batch Normalization and ReLU Activation.
+    """
     def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True):
         super(conv2DBatchNormRelu, self).__init__()
 
@@ -47,6 +67,9 @@ class conv2DBatchNormRelu(nn.Module):
 
 
 class deconv2DBatchNormRelu(nn.Module):
+    """
+    2D Transposed Convolution (Deconvolution) with Batch Normalization.
+    """
     def __init__(self, in_channels, n_filters, k_size, stride, padding, bias=True):
         super(deconv2DBatchNormRelu, self).__init__()
 
@@ -61,6 +84,9 @@ class deconv2DBatchNormRelu(nn.Module):
 
 
 class unetConv2(nn.Module):
+    """
+    Basic U-Net convolution block with multiple stacked layers.
+    """
     def __init__(self, in_size, out_size, is_batchnorm, n=2, ks=3, stride=1, padding=1):
         super(unetConv2, self).__init__()
         self.n = n
@@ -158,10 +184,12 @@ class FCNConv3(nn.Module):
 
 
 class UnetGatingSignal2(nn.Module):
+    """
+    Gating Signal for attention mechanisms in U-Net.
+    """
     def __init__(self, in_size, out_size, is_batchnorm):
         super(UnetGatingSignal2, self).__init__()
         self.fmap_size = (4, 4)
-        # self.fmap_size = (4, 4, 4)
 
         if is_batchnorm:
             self.conv1 = nn.Sequential(nn.Conv2d(in_size, in_size//2, 1),
@@ -179,7 +207,6 @@ class UnetGatingSignal2(nn.Module):
             self.fc1 = nn.Linear(in_features=(in_size//2) * self.fmap_size[0] * self.fmap_size[1],
                                  out_features=out_size, bias=True)
 
-        # initialise the blocks
         for m in self.children():
             init_weights(m, init_type='kaiming')
 
@@ -187,10 +214,7 @@ class UnetGatingSignal2(nn.Module):
         batch_size = inputs.size(0)
         outputs = self.conv1(inputs)
         outputs = outputs.reshape(batch_size, -1)
-        # outputs = outputs.view(batch_size, -1)
         outputs = self.fc1(outputs)
-        # print("output")
-        # print(outputs.size())
         return outputs
 
 
@@ -208,7 +232,6 @@ class UnetGridGatingSignal2(nn.Module):
                                        nn.ReLU(inplace=True),
                                        )
 
-        # initialise the blocks
         for m in self.children():
             init_weights(m, init_type='kaiming')
 
@@ -238,7 +261,6 @@ class UnetGatingSignal3(nn.Module):
             self.fc1 = nn.Linear(in_features=(in_size//2) * self.fmap_size[0] * self.fmap_size[1] * self.fmap_size[2],
                                  out_features=out_size, bias=True)
 
-        # initialise the blocks
         for m in self.children():
             init_weights(m, init_type='kaiming')
 
@@ -264,7 +286,6 @@ class UnetGridGatingSignal3(nn.Module):
                                        nn.ReLU(inplace=True),
                                        )
 
-        # initialise the blocks
         for m in self.children():
             init_weights(m, init_type='kaiming')
 
@@ -282,7 +303,6 @@ class unetUp(nn.Module):
         else:
             self.up = nn.UpsamplingBilinear2d(scale_factor=2)
 
-        # initialise the blocks
         for m in self.children():
             if m.__class__.__name__.find('unetConv2') != -1: continue
             init_weights(m, init_type='kaiming')
@@ -305,7 +325,6 @@ class UnetUp3(nn.Module):
             self.conv = UnetConv3(in_size+out_size, out_size, is_batchnorm)
             self.up = nn.Upsample(scale_factor=(2, 2, 1), mode='trilinear')
 
-        # initialise the blocks
         for m in self.children():
             if m.__class__.__name__.find('UnetConv3') != -1: continue
             init_weights(m, init_type='kaiming')
@@ -324,7 +343,6 @@ class UnetUp3_CT(nn.Module):
         self.conv = UnetConv3(in_size + out_size, out_size, is_batchnorm, kernel_size=(3,3,3), padding_size=(1,1,1))
         self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
 
-        # initialise the blocks
         for m in self.children():
             if m.__class__.__name__.find('UnetConv3') != -1: continue
             init_weights(m, init_type='kaiming')
@@ -339,7 +357,9 @@ class UnetUp3_CT(nn.Module):
 
 # Squeeze-and-Excitation Network
 class SqEx(nn.Module):
-
+    """
+    Squeeze-and-Excitation (SE) Block for channel-wise attention.
+    """
     def __init__(self, n_features, reduction=6):
         super(SqEx, self).__init__()
 
@@ -560,7 +580,6 @@ class no_op(object):
         pass
 
 def staple(a):
-    # a: n,c,h,w detach tensor
     mvres = mv(a)
     gap = 0.4
     if gap > 0.02:
@@ -586,8 +605,6 @@ def dice_score(pred, targs):
     return 2. * (pred*targs).sum() / (pred+targs).sum()
 
 def mv(a):
-    # res = Image.fromarray(np.uint8(img_list[0] / 2 + img_list[1] / 2 ))
-    # res.show()
     b = a.size(0)
     return torch.sum(a, 0, keepdim=True) / b
 
@@ -597,7 +614,6 @@ def tensor_to_img_array(tensor):
     return image
 
 def export(tar, img_path=None):
-    # image_name = image_name or "image.jpg"
     c = tar.size(1)
     if c == 3:
         vutils.save_image(tar, fp = img_path)

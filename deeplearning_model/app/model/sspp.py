@@ -8,6 +8,7 @@ from .sspp_utils.cross_attn import CBAMBlock
 
 
 class SwinASPP(nn.Module):
+    """Swin-based Atrous Spatial Pyramid Pooling (ASPP) module with optional CBAM cross-attention."""
     def __init__(self, input_size, input_dim, out_dim, cross_attn,
                  depth, num_heads, mlp_ratio, qkv_bias, qk_scale,
                  drop_rate, attn_drop_rate, drop_path_rate, 
@@ -77,10 +78,13 @@ class SwinASPP(nn.Module):
 
 
     def forward(self, x):
-        """
-        x: input tensor (high level features) with shape (batch_size, input_size, input_size, input_dim)
+        """Forward pass of SwinASPP module.
 
-        returns ...
+        Args:
+            x (torch.Tensor): Input tensor of shape (batch_size, input_size, input_size, input_dim).
+
+        Returns:
+            torch.Tensor: Output tensor of shape (batch_size, input_size, input_size, out_dim).
         """
         B, H, W, C = x.shape
         x = x.reshape(B, H*W, C)
@@ -93,7 +97,6 @@ class SwinASPP(nn.Module):
         features = torch.cat(features, dim=-1)
         features = self.proj(features)
 
-        # Check if needed 
         if self.norm is not None:
             features = self.norm(features)
         if self.activation is not None:
@@ -104,6 +107,7 @@ class SwinASPP(nn.Module):
     
 
     def load_from(self, pretrained_path):
+        """Loads pre-trained weights from a checkpoint file."""
         pretrained_path = pretrained_path
         if pretrained_path is not None:
             print("pretrained_path:{}".format(pretrained_path))
@@ -117,7 +121,6 @@ class SwinASPP(nn.Module):
                         print("delete key:{}".format(k))
                         del pretrained_dict[k]
                 msg = self.load_state_dict(pretrained_dict,strict=False)
-                # print(msg)
                 return
             pretrained_dict = pretrained_dict['model']
             print("---start load pretrained modle of swin encoder---")
@@ -135,7 +138,6 @@ class SwinASPP(nn.Module):
                 for key in keys:
                     for j in num_pretrained_layers:
                         if key in layer_dict: continue
-                        # new_k = "layers." + str(i) + k[8:]
                         pre_k = "layers." + str(j) + key[8:]
                         pre_v = pretrained_dict.get(pre_k, None)
                         if pre_v is not None:
@@ -149,7 +151,6 @@ class SwinASPP(nn.Module):
                             elif k not in model_dict:
                                 del layer_dict[k]
             msg = self.load_state_dict(layer_dict, strict=False)
-            # print(msg)
             
             print(f"ASPP Found Weights: {len(layer_dict)}")
         else:
@@ -157,6 +158,7 @@ class SwinASPP(nn.Module):
 
 
 def build_aspp(input_size, input_dim, out_dim, config):
+    """Builds the SwinASPP module based on the given configuration."""
     if config.norm_layer == 'layer':
         norm_layer = nn.LayerNorm
     
@@ -194,7 +196,3 @@ if __name__ == '__main__':
     print(model.possible_window_sizes)
 
     out = model(batch)
-    print(out.shape)
-
-    # for item in out:
-    #     print(item.shape)

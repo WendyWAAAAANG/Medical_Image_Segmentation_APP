@@ -8,14 +8,14 @@ import time
 import numpy as np
 
 
-###############################################################################
-# Functions
-###############################################################################
+##############################################################################
+# Weight Initialization Functions
+##############################################################################
 
 
 def weights_init_normal(m):
+    """Initialize weights using a normal distribution."""
     classname = m.__class__.__name__
-    # print(classname)
     if classname.find('Conv') != -1:
         init.normal_(m.weight.data, 0.0, 0.02)
     elif classname.find('Linear') != -1:
@@ -26,8 +26,8 @@ def weights_init_normal(m):
 
 
 def weights_init_xavier(m):
+    """Initialize weights using Xavier initialization."""
     classname = m.__class__.__name__
-    # print(classname)
     if classname.find('Conv') != -1:
         init.xavier_normal(m.weight.data, gain=1)
     elif classname.find('Linear') != -1:
@@ -38,8 +38,8 @@ def weights_init_xavier(m):
 
 
 def weights_init_kaiming(m):
+    """Initialize weights using Kaiming initialization."""
     classname = m.__class__.__name__
-    # print(classname)
     if classname.find('Conv') != -1:
         init.kaiming_normal_(m.weight.data, a=0, mode='fan_in')
     elif classname.find('Linear') != -1:
@@ -50,8 +50,8 @@ def weights_init_kaiming(m):
 
 
 def weights_init_orthogonal(m):
+    """Initialize weights using Orthogonal initialization."""
     classname = m.__class__.__name__
-    # print(classname)
     if classname.find('Conv') != -1:
         init.orthogonal(m.weight.data, gain=1)
     elif classname.find('Linear') != -1:
@@ -62,7 +62,7 @@ def weights_init_orthogonal(m):
 
 
 def init_weights(net, init_type='normal'):
-    # print('initialization method [%s]' % init_type)
+    """Applies a specified weight initialization method to a network."""
     if init_type == 'normal':
         net.apply(weights_init_normal)
     elif init_type == 'xavier':
@@ -76,6 +76,7 @@ def init_weights(net, init_type='normal'):
 
 
 def get_norm_layer(norm_type='instance'):
+    """Return a normalization layer."""
     if norm_type == 'batch':
         norm_layer = functools.partial(nn.BatchNorm2d, affine=True)
     elif norm_type == 'instance':
@@ -93,7 +94,12 @@ def adjust_learning_rate(optimizer, lr):
         param_group['lr'] = lr
 
 
+##############################################################################
+# Learning Rate Scheduling
+##############################################################################
+
 def get_scheduler(optimizer, opt):
+    """Returns a learning rate scheduler based on the specified policy."""
     print('opt.lr_policy = [{}]'.format(opt.lr_policy))
     if opt.lr_policy == 'lambda':
         def lambda_rule(epoch):
@@ -112,7 +118,6 @@ def get_scheduler(optimizer, opt):
         scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.2, threshold=0.01, patience=5)
     elif opt.lr_policy == 'step_warmstart':
         def lambda_rule(epoch):
-            # print(epoch)
             if epoch < 5:
                 lr_l = 0.1
             elif 5 <= epoch < 100:
@@ -126,7 +131,6 @@ def get_scheduler(optimizer, opt):
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule)
     elif opt.lr_policy == 'step_warmstart2':
         def lambda_rule(epoch):
-            # print(epoch)
             if epoch < 5:
                 lr_l = 0.1
             elif 5 <= epoch < 50:
@@ -146,6 +150,7 @@ def get_scheduler(optimizer, opt):
 
 def define_G(input_nc, output_nc, ngf, which_model_netG, norm='batch', use_dropout=False, init_type='normal',
              gpu_ids=[]):
+    """Create a generator."""
     netG = None
     use_gpu = len(gpu_ids) > 0
     norm_layer = get_norm_layer(norm_type=norm)
@@ -175,6 +180,7 @@ def define_G(input_nc, output_nc, ngf, which_model_netG, norm='batch', use_dropo
 
 def define_D(input_nc, ndf, which_model_netD,
              n_layers_D=3, norm='batch', use_sigmoid=False, init_type='normal', gpu_ids=[]):
+    """Create a discriminator."""
     netD = None
     use_gpu = len(gpu_ids) > 0
     norm_layer = get_norm_layer(norm_type=norm)
@@ -197,6 +203,7 @@ def define_D(input_nc, ndf, which_model_netD,
 
 
 def print_network(net):
+    """Print the network architecture."""
     num_params = 0
     for param in net.parameters():
         num_params += param.numel()
@@ -205,6 +212,7 @@ def print_network(net):
 
 
 def get_n_parameters(net):
+    """Return the number of parameters in a network."""
     num_params = 0
     for param in net.parameters():
         num_params += param.numel()
@@ -212,7 +220,7 @@ def get_n_parameters(net):
 
 
 def measure_fp_bp_time(model, x, y):
-    # synchronize gpu time and measure fp
+    """Measure the forward and backward pass time."""
     torch.cuda.synchronize()
     t0 = time.time()
     y_pred = model(x)
@@ -224,10 +232,8 @@ def measure_fp_bp_time(model, x, y):
     else:
         y_pred = y_pred.sum()
 
-    # zero gradients, synchronize time and measure
     model.zero_grad()
     t0 = time.time()
-    # y_pred.backward(y)
     y_pred.backward()
     torch.cuda.synchronize()
     elapsed_bp = time.time() - t0
@@ -235,16 +241,14 @@ def measure_fp_bp_time(model, x, y):
 
 
 def benchmark_fp_bp_time(model, x, y, n_trial=1000):
-    # transfer the model on GPU
+    """Measure the forward and backward pass time."""
     model.cuda()
 
-    # DRY RUNS
     for i in range(10):
         _, _ = measure_fp_bp_time(model, x, y)
 
     print('DONE WITH DRY RUNS, NOW BENCHMARKING')
 
-    # START BENCHMARKING
     t_forward = []
     t_backward = []
 
@@ -254,7 +258,6 @@ def benchmark_fp_bp_time(model, x, y, n_trial=1000):
         t_forward.append(t_fp)
         t_backward.append(t_bp)
 
-    # free memory
     del model
 
     return np.mean(t_forward), np.mean(t_backward)
@@ -305,6 +308,10 @@ class GANLoss(nn.Module):
         target_tensor = self.get_target_tensor(input, target_is_real)
         return self.loss(input, target_tensor)
 
+
+##############################################################################
+# Network Architecture - Generator and Discriminator
+##############################################################################
 
 # Defines the generator that consists of Resnet blocks between a few
 # downsampling/upsampling operations.

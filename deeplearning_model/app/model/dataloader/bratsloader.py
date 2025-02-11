@@ -29,11 +29,9 @@ class BRATSDataset(torch.utils.data.Dataset):
         self.seqtypes_set = set(self.seqtypes)
         self.database = []
         for root, dirs, files in os.walk(self.directory):
-            # if there are no subdirs, we have data
             if not dirs:
                 files.sort()
                 datapoint = dict()
-                # extract all files as channels
                 for f in files:
                     seqtype = f.split('_')[3]
                     datapoint[seqtype] = os.path.join(root, f)
@@ -51,16 +49,16 @@ class BRATSDataset(torch.utils.data.Dataset):
         out = torch.stack(out)
         if self.test_flag:
             image=out
-            image = image[..., 8:-8, 8:-8]     #crop to a size of (224, 224)
+            image = image[..., 8:-8, 8:-8]
             if self.transform:
                 image = self.transform(image)
             return (image, image, path)
         else:
             image = out[:-1, ...]
             label = out[-1, ...][None, ...]
-            image = image[..., 8:-8, 8:-8] # crop to a size of (224, 224)
+            image = image[..., 8:-8, 8:-8]
             label = label[..., 8:-8, 8:-8]
-            label=torch.where(label > 0, 1, 0).float() # merge all tumor classes into one
+            label=torch.where(label > 0, 1, 0).float()
             if self.transform:
                 state = torch.get_rng_state()
                 image = self.transform(image)
@@ -97,11 +95,9 @@ class BRATSDataset3D(torch.utils.data.Dataset):
         self.seqtypes_set = set(self.seqtypes)
         self.database = []
         for root, dirs, files in os.walk(self.directory):
-            # if there are no subdirs, we have data
             if not dirs:
                 files.sort()
                 datapoint = dict()
-                # extract all files as channels
                 for f in files:
                     seqtype = f.split('_')[3].split('.')[0]
                     datapoint[seqtype] = os.path.join(root, f)
@@ -127,16 +123,14 @@ class BRATSDataset3D(torch.utils.data.Dataset):
             image=out
             if self.transform:
                 image = self.transform(image)
-            return (image, image, path.split('.nii')[0] + "_slice" + str(slice)+ ".nii") # virtual path
+            return (image, image, path.split('.nii')[0] + "_slice" + str(slice)+ ".nii")
         else:
             image = out[:-1, ...]
             label = out[-1, ...][None, ...]
-            label=torch.where(label > 0, 1, 0).float()  #merge all tumor classes into one
+            label=torch.where(label > 0, 1, 0).float()
             if self.transform:
                 state = torch.get_rng_state()
                 image = self.transform(image)
                 torch.set_rng_state(state)
                 label = self.transform(label)
-            return (image, label, path.split('.nii')[0] + "_slice" + str(slice)+ ".nii") # virtual path
-
-
+            return (image, label, path.split('.nii')[0] + "_slice" + str(slice)+ ".nii")
