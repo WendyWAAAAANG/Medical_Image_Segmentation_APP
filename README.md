@@ -53,7 +53,7 @@ z_{all}' = w_{scale} \cdot z_{all},
 $$
 
 
-\noindent where $W_1$ and $W_2$ are learnable MLP parameters, $\delta$ is the ReLU function, $\sigma$ is the Sigmoid function, and GAP is global average pooling.
+* where $W_1$ and $W_2$ are learnable MLP parameters, $\delta$ is the ReLU function, $\sigma$ is the Sigmoid function, and GAP is global average pooling.
 
 In the second attention level, Cross-Contextual Attention learns scaling parameters to enhance informative tokens by calculating their weight maps, using the same strategy:
 
