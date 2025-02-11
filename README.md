@@ -70,11 +70,17 @@ $$
 
 The primary evaluation metric used was the Dice Similarity Coefficient (DSC).
 
-The Dice Similarity Coefficient (DSC) is a key metric for evaluating segmentation models, ranging from 0 to 1 to represent similarity between two samples. It is calculated as:
-$$
+The **Dice Similarity Coefficient (DSC)** is a key metric for evaluating segmentation models, ranging from **0 to 1**, representing the similarity between two samples. It is calculated as:
+
+\[
 DSC = \frac{2TP}{FN+FP+2TP}
-$$
-Here, $TP$ represents true positive pixels, $FP$ indicates false positive pixels, and $FN$ represents false negative pixels.
+\]
+
+where:
+
+- **TP** represents **true positive** pixels.
+- **FP** indicates **false positive** pixels.
+- **FN** represents **false negative** pixels.
 
 The models achieved the following scores:
 
