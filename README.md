@@ -117,6 +117,12 @@ The U-Net + SSPP model outperformed the naive and classical ML approaches, achie
 │   ├── sample_data/
 │   ├── train.py
 │   └── visualize.py
+├── Machine_Learning_Model
+│   ├── LICENSE
+│   ├── Machine_Learning_Model.py
+│   ├── README.md
+│   ├── read_data.sh
+│   └── requirements.txt
 ├── Naive_Model
 │   ├── LICENSE
 │   ├── README.md
@@ -124,13 +130,11 @@ The U-Net + SSPP model outperformed the naive and classical ML approaches, achie
 │   ├── output/
 │   └── requirements.txt
 ├── README.md
+├── requirements.txt
 ├── sspp_unet_api
-│   ├── app
-│   │   ├── LICENSE
-│   │   ├── main.py
-│   │   ├── model/
-│   │   ├── sample_data/
-│   │   └── visualize.py
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── app/
 │   └── requirements.txt
 └── streamlit_app/
 ```
